@@ -48,7 +48,7 @@ initializeDb(db => {
   });
 
   app.put("/set_current_session", (req, res) => {
-    fs.readFile("./src/jsonDb.json", "utf8", function readFileCallback(
+    fs.readFile("jsonDb.json", "utf8", function readFileCallback(
       err,
       data
     ) {
