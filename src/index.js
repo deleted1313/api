@@ -73,8 +73,10 @@ initializeDb(db => {
         // // obj.data.push(jsonString); //add some data
         // // console.log(obj, json)
         const json = JSON.stringify(newObj); //convert it back to json
-        fs.writeFile("./src/jsonDb.json", json, "utf8"); // write it back
-        res.sendStatus(200);
+        fs.writeFile("./src/jsonDb.json", json, function(err, result) {
+          if (err) console.log("error", err);
+          res.sendStatus(200);
+        }); // write it back
       }
     });
   });
