@@ -48,10 +48,7 @@ initializeDb(db => {
   });
 
   app.put("/set_current_session", (req, res) => {
-    fs.readFile("jsonDb.json", "utf8", function readFileCallback(
-      err,
-      data
-    ) {
+    fs.readFile("./jsonDb.json", "utf8", function readFileCallback(err, data) {
       if (err) {
         console.log(err);
       } else {
@@ -73,7 +70,7 @@ initializeDb(db => {
         // // obj.data.push(jsonString); //add some data
         // // console.log(obj, json)
         const json = JSON.stringify(newObj); //convert it back to json
-        fs.writeFile("./src/jsonDb.json", json, function(err, result) {
+        fs.writeFile("./jsonDb.json", json, function(err, result) {
           if (err) console.log("error", err);
           res.sendStatus(200);
         }); // write it back
