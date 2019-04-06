@@ -47,7 +47,7 @@ initializeDb(db => {
     res.send(jsonDb.data.current_session);
   });
 
-  app.post("/current_session", (req, res) => {
+  app.put("/set_current_session", (req, res) => {
     fs.readFile("./src/jsonDb.json", "utf8", function readFileCallback(
       err,
       data
@@ -55,31 +55,26 @@ initializeDb(db => {
       if (err) {
         console.log(err);
       } else {
+        console.log(JSON.parse(data));
         const obj = JSON.parse(data); //now it an object
-        let jsonString = "";
-        req.on("data", function(data) {
-          jsonString += data;
-        });
 
-        const reqData = jsonString;
-        console.log(reqData);
-        req.on("end", function() {
-          console.log(JSON.parse(jsonString), obj);
-          const newObj = {
-            ...obj,
-            data: {
-              ...obj.data,
-              current_session: {
-                ...JSON.parse(jsonString)
-              }
+        console.log(req.body, obj);
+        // console.log(JSON.parse(jsonString), obj);
+        const newObj = {
+          ...obj,
+          data: {
+            ...obj.data,
+            current_session: {
+              ...req.body
             }
-          };
-          console.log(newObj);
-          // obj.data.push(jsonString); //add some data
-          // console.log(obj, json)
-          const json = JSON.stringify(newObj); //convert it back to json
-          fs.writeFile("./src/jsonDb.json", json, "utf8"); // write it back
-        });
+          }
+        };
+        // console.log(newObj);
+        // // obj.data.push(jsonString); //add some data
+        // // console.log(obj, json)
+        const json = JSON.stringify(newObj); //convert it back to json
+        fs.writeFile("./src/jsonDb.json", json, "utf8"); // write it back
+        res.sendStatus(200);
       }
     });
   });
