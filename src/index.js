@@ -8,7 +8,7 @@ import api from "./api";
 import config from "./config.json";
 import jsonDb from "./jsonDb.json";
 import fs from "fs";
-
+import path from "path";
 let app = express();
 app.server = http.createServer(app);
 
@@ -48,34 +48,41 @@ initializeDb(db => {
   });
 
   app.put("/set_current_session", (req, res) => {
-    fs.readFile("./jsonDb.json", "utf8", function readFileCallback(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(JSON.parse(data));
-        const obj = JSON.parse(data); //now it an object
+    fs.readFile(
+      path.resolve(__dirname, "jsonDb.json"),
+      "utf8",
+      function readFileCallback(err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(JSON.parse(data));
+          const obj = JSON.parse(data); //now it an object
 
-        console.log(req.body, obj);
-        // console.log(JSON.parse(jsonString), obj);
-        const newObj = {
-          ...obj,
-          data: {
-            ...obj.data,
-            current_session: {
-              ...req.body
+          console.log(req.body, obj);
+          // console.log(JSON.parse(jsonString), obj);
+          const newObj = {
+            ...obj,
+            data: {
+              ...obj.data,
+              current_session: {
+                ...req.body
+              }
             }
-          }
-        };
-        // console.log(newObj);
-        // // obj.data.push(jsonString); //add some data
-        // // console.log(obj, json)
-        const json = JSON.stringify(newObj); //convert it back to json
-        fs.writeFile("./jsonDb.json", json, function(err, result) {
-          if (err) console.log("error", err);
-          res.sendStatus(200);
-        }); // write it back
+          };
+          // console.log(newObj);
+          // // obj.data.push(jsonString); //add some data
+          // // console.log(obj, json)
+          const json = JSON.stringify(newObj); //convert it back to json
+          fs.writeFile(path.resolve(__dirname, "jsonDb.json"), json, function(
+            err,
+            result
+          ) {
+            if (err) console.log("error", err);
+            res.sendStatus(200);
+          }); // write it back
+        }
       }
-    });
+    );
   });
 
   app.server.listen(process.env.PORT || config.port, () => {
